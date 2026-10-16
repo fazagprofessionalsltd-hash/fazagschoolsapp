@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FAZAG Schools – School Management System</title>
+<style>
+:root{--bg:#0a1330;--panel:#121d45;--panel2:#1a2758;--line:#2a3a75;--tx:#e8ecf8;--mu:#93a0c9;--ac:#f2b544;--ok:#4cc38a;--bad:#ef6b6b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 Georgia,'Times New Roman',serif}
+h1,h2,h3,button,label,th,nav a{font-family:'Trebuchet MS',Verdana,sans-serif}
+h2{margin:0 0 14px;font-size:22px}h3{margin:22px 0 10px;font-size:16px;color:var(--ac)}
+input,select,textarea,button{font:inherit;font-size:14px}
+input,select,textarea{background:var(--bg);color:var(--tx);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--ac)}
+button{background:var(--ac);color:#1a1300;border:0;border-radius:6px;padding:8px 14px;font-weight:700;cursor:pointer}
+button.g{background:var(--panel2);color:var(--tx);border:1px solid var(--line)}button.d{background:var(--bad);color:#fff;padding:4px 9px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;align-items:end}
+label{display:block;font-size:12.5px;color:var(--mu);margin-bottom:4px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{color:var(--mu);font-weight:600;background:var(--panel2)}
+tfoot td{font-weight:700;color:var(--ac);border-top:2px solid var(--ac)}
+#login{min-height:100vh;display:grid;place-items:center;padding:16px}
+#login .box{width:min(400px,100%)}#login h1{margin:0 0 4px;font-size:22px}
+.tabs{display:flex;gap:8px;margin:14px 0}.tabs button{flex:1}
+#app{display:none;min-height:100vh}
+aside{position:fixed;inset:0 auto 0 0;width:220px;background:var(--panel);border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:4px}
+aside .b{font:700 15px 'Trebuchet MS',sans-serif;color:var(--ac);margin-bottom:14px;line-height:1.3}
+aside a{padding:10px 12px;border-radius:6px;color:var(--tx);text-decoration:none;cursor:pointer}
+aside a:hover{background:var(--panel2)}aside a.on{background:var(--ac);color:#1a1300;font-weight:700}
+main{margin-left:220px;padding:24px}
+.sub{position:fixed;left:220px;top:0;bottom:0;width:180px;background:var(--panel);border-right:1px solid var(--line);padding:18px 10px;display:flex;flex-direction:column;gap:3px;z-index:5;overflow:auto}
+.sub small{color:var(--mu);font:600 11px 'Trebuchet MS',sans-serif;letter-spacing:.08em;margin:2px 6px 10px}
+.sub button{width:100%;text-align:left;background:transparent;border:0;color:var(--tx);padding:9px 10px;font-size:13.5px;font-weight:600}.sub button:hover{background:var(--panel2);color:var(--ac)}
+main.hs{margin-left:400px}.rc .ti{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:4px 18px;margin-top:6px}.rc .ti span{display:flex;justify-content:space-between;border-bottom:1px dotted #999;padding:2px 0}.sub button.on{background:var(--panel2);color:var(--ac)}.box{scroll-margin-top:64px}
+.st{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}.st div{background:var(--panel2);padding:14px;border-radius:8px}
+.st b{display:block;font-size:26px;color:var(--ac)}
+.pos{color:var(--ok)}.neg{color:var(--bad)}img.ph{width:44px;height:52px;object-fit:cover;border-radius:4px}
+#msg{position:fixed;right:16px;bottom:16px;background:var(--ac);color:#1a1300;padding:10px 16px;border-radius:8px;display:none;font-weight:700;z-index:9}
+@media(max-width:760px){aside{position:static;width:auto;flex-direction:row;flex-wrap:wrap}aside .b{width:100%;margin:0}main,main.hs{margin:0;padding:14px}.sub{position:sticky;left:auto;top:0;bottom:auto;width:auto;flex-direction:row;flex-wrap:wrap;border:0;padding:8px 0;background:var(--bg)}.sub small{display:none}.sub button{width:auto;background:var(--panel2)}}
+.rc{background:#fff;color:#111;border:3px double #12245e;padding:22px;margin-bottom:22px;page-break-after:always;font-family:Georgia,serif}
+.rc .rh{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:3px solid #f2b544;padding-bottom:10px;margin-bottom:10px}
+.rc h1{margin:0 0 4px;font-size:18px;color:#12245e}.rc .rh img{width:70px;height:84px;object-fit:cover;border:1px solid #999}
+.rc .rh img.lg{width:auto;max-width:90px;height:70px;object-fit:contain;border:0}.rc .ri{display:flex;flex-wrap:wrap;gap:6px 24px;margin-bottom:12px}.rc th{background:#12245e;color:#fff}.rc td{color:#111;border-color:#ccc}
+.rc .sm{display:flex;flex-wrap:wrap;gap:6px 24px;margin:12px 0;padding:8px 10px;background:#f3f0e4}.rc .sg{display:flex;justify-content:space-between;gap:20px;margin-top:38px}
+.rc .sg div{flex:1;border-top:1px solid #111;padding-top:4px;text-align:center;font-size:13px}.rc small{color:#555}
+@media print{aside,button,#msg,.noprint{display:none!important}main,main.hs{margin:0}body{background:#fff;color:#000}}
+</style></head><body>
+
+<div id="login"><div class="box">
+<h1>FAZAG SCHOOLS OF SCIENCE AND TECHNICAL SKILLS</h1>
+<div style="color:var(--mu)">School Management System</div>
+<div class="tabs"><button id="t1" onclick="lt(1)">Staff login</button><button id="t2" class="g" onclick="lt(2)">Student login</button></div>
+<div id="l1"><label>Username</label><input id="lu"><br><br><label>Password</label><input id="lp" type="password" onkeydown="if(event.key=='Enter')doLogin()"><br><br><button onclick="doLogin()">Log in</button></div>
+<div id="l2" style="display:none"><label>Reg. No.</label><input id="sr" placeholder="FSTS/0001"><br><br><label>Full name</label><input id="sn" onkeydown="if(event.key=='Enter')doLogin()"><br><br><button onclick="doLogin()">View my results</button></div>
+<p style="margin-top:16px;font-size:13px;color:var(--mu)">Setting up a new computer? <a style="color:var(--ac);cursor:pointer" onclick="$('imp').click()">Load a data file</a></p><input type="file" id="imp" accept=".json" hidden onchange="importData(this)">
+</div></div>
+
+<div id="app"><aside id="side"></aside><main id="main"></main></div>
+<div id="msg"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script>
+const K='fazag_db_v1',$=id=>document.getElementById(id),v=id=>($(id)?$(id).value.trim():'');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const def=()=>({staff:[{u:'admin',p:'password12345',n:'Administrator',r:'admin',c:[]}],classes:['JSS 1','JSS 2','JSS 3','SS 1','SS 2','SS 3'],students:[],subjects:['Mathematics','English Language'],scores:{},comments:{},att:{},tx:[],cats:['School fees','Salary','Utility','Assets'],set:{term:'First Term',session:'2026/2027'},pub:{},prem:{},logo:'',csec:{},traits:{},books:[]});
+let db=JSON.parse(localStorage.getItem(K)||'null')||def(),me=null,page='dash',E={cl:'',sub:'',date:new Date().toISOString().slice(0,10)},F={},photo='',stream=null;
+db.prem=db.prem||{};db.logo=db.logo||'';
+const SC=[['c1','1st CA',20],['c2','2nd CA',20],['ag','Assg',5],['at','Attn',5],['ex','Exam',50]],rt=r=>SC.reduce((a,x)=>a+(+r[x[0]]||0),0)+(+r.ca||0);
+let EDIT='',FTX=[],FST=[],RR=[],RRT='',AR=[],ART='';
+const TR=[['att','Attentiveness'],['coop','Cooperation with others'],['neat','Neatness'],['punc','Punctuality'],['hon','Honesty'],['prob','Problem solving'],['aa','Attitude to academic work']],TL4={4:'Excellent',3:'Very Good',2:'Good',1:'Struggling'};
+const SBC=window.SUPABASE_CONFIG||{};let sb=null,SERVER=!!(window.supabase&&SBC.url&&SBC.key&&!/YOUR_/.test(SBC.url)),base=null,ver='',busy=0,again=0;
+const KEYED=['scores','comments','att','pub','prem','traits'],clone=o=>JSON.parse(JSON.stringify(o)),J=JSON.stringify;
+const save=()=>{try{localStorage.setItem(K,J(db))}catch(e){}push()};
+function makePatch(){const p={};for(const k in db){if(KEYED.includes(k)){const q={};for(const x in db[k])if(J(db[k][x])!==J((base[k]||{})[x]))q[x]=db[k][x];if(Object.keys(q).length)p[k]=q}else if(J(db[k])!==J(base[k]))p[k]=db[k]}return p}
+function adopt(d){db=Object.assign(def(),d);base=clone(db);try{localStorage.setItem(K,J(db))}catch(e){}if(me&&me.r!='student'){const m=db.staff.find(x=>x.u==me.u);if(!m){logout();return}me=m}}
+const rowsOf=p=>{const r=[];for(const s in p){if(KEYED.includes(s))for(const k in p[s])r.push({k:`k/${s}/${k}`,v:p[s][k]});else r.push({k:'p/'+s,v:p[s]})}return r};
+async function push(){if(!SERVER||!base||!sb)return;if(busy){again=1;return}busy=1;const snap=clone(db),rows=rowsOf(makePatch());
+ try{if(rows.length){for(let i=0;i<rows.length;i+=100){const {error}=await sb.from('school_data').upsert(rows.slice(i,i+100));if(error)throw error}
+  const t=String(Date.now()),{error}=await sb.from('school_data').upsert({k:'meta/ver',v:t});if(error)throw error;ver=t;base=snap}}catch(e){msg('Cannot reach the online database. Changes are not shared.')}
+ busy=0;if(again){again=0;push()}}
+async function fetchAll(){const o={};let a=0;for(;;){const {data,error}=await sb.from('school_data').select('k,v').order('k').range(a,a+999);if(error)throw error;
+ data.forEach(r=>{if(r.k.startsWith('p/'))o[r.k.slice(2)]=r.v;else if(r.k.startsWith('k/')){const i=r.k.indexOf('/',2),s=r.k.slice(2,i);(o[s]=o[s]||{})[r.k.slice(i+1)]=r.v}else if(r.k=='meta/ver')ver=r.v});if(data.length<1000)break;a+=1000}return o}
+async function pull(){try{if(!sb){sb=supabase.createClient(SBC.url,SBC.key);const {error}=await sb.auth.signInAnonymously();if(error)throw error}
+ const o=await fetchAll();if(Object.keys(o).length)adopt(Object.assign(def(),o));else{base={};await push()}}catch(e){SERVER=false;msg('Cannot connect to Supabase: '+(e.message||e))}}
+const bookUrl=(id,dl)=>sb?sb.storage.from('books').getPublicUrl(id+'.pdf',dl?{download:dl+'.pdf'}:undefined).data.publicUrl:'#';
+const msg=t=>{const m=$('msg');m.textContent=t;m.style.display='block';setTimeout(()=>m.style.display='none',2600)};
+const opts=(a,sel,blank)=>(blank?`<option value="">${blank}</option>`:'')+a.map(x=>`<option ${x==sel?'selected':''}>${esc(x)}</option>`).join('');
+const TERMS=['First Term','Second Term','Third Term'];
+const SECS=['Nursery','Basic','Secondary'],guess=c=>/nurs|^kg|^pre/i.test(c)?'Nursery':/basic|prim|^pry|^p\d/i.test(c)?'Basic':/^(jss|ss|js|sss)/i.test(c)?'Secondary':'',clsSec=c=>(db.csec||{})[c]||guess(c||''),subSec=u=>u.includes('~')?u.slice(u.lastIndexOf('~')+1):'',subName=u=>u.includes('~')?u.slice(0,u.lastIndexOf('~')):u,
+subsFor=c=>db.subjects.filter(u=>{const s=subSec(u);return !s||s==clsSec(c)}),secs=()=>{const a=[...new Set(myCls().map(clsSec).filter(Boolean))];return me.r=='admin'||!a.length?SECS:a},
+optSub=(l,sel,all)=>(all?`<option value="">${all}</option>`:'')+l.map(u=>`<option value="${esc(u)}" ${u==sel?'selected':''}>${esc(subName(u))}</option>`).join('');
+const sub=l=>`<div class="sub noprint"><small>ON THIS PAGE</small>${l.map(x=>`<button onclick="jump('${x[0]}')">${x[1]}</button>`).join('')}<button onclick="scrollTo({top:0,behavior:'smooth'})">Back to top</button></div>`;
+const subp=l=>`<div class="sub noprint"><small>EDUCATOR MENU</small>${l.map(x=>x[2]?`<button class="${[x[0],...x[2].map(c=>c[0])].includes(E.pg)?'on':''}" onclick="E.cmo=E.cmo?0:1;if(E.cmo)E.pg='${x[0]}';draw();scrollTo(0,0)">${x[1]} ${E.cmo?'&#9652;':'&#9662;'}</button>${E.cmo?x[2].map(c=>`<button class="${c[0]==E.pg?'on':''}" style="padding-left:26px;font-weight:500" onclick="E.pg='${c[0]}';draw();scrollTo(0,0)">${c[1]}</button>`).join(''):''}`:`<button class="${x[0]==E.pg?'on':''}" onclick="E.pg='${x[0]}';draw();scrollTo(0,0)">${x[1]}</button>`).join('')}</div>`;
+function jump(id){const e=$(id);if(e)e.scrollIntoView({behavior:'smooth',block:'start'})}
+const curT=()=>db.set.term+'|'+db.set.session,closedMap=()=>db.set.closed||(db.set.closed={}),isClosed=T=>!!closedMap()[T],isAct=s=>(s.status||'Active')=='Active',termList=()=>[curT(),...Object.keys(closedMap()).filter(k=>k!=curT())];
+function stuRows(s,T){const o=[];Object.keys(db.scores).forEach(k=>{const r=db.scores[k],q=k.split('|');if(r&&q[0]==s.reg&&q[2]+'|'+q[3]==T)o.push({u:q[1],r})});return o.sort((a,b)=>db.subjects.indexOf(a.u)-db.subjects.indexOf(b.u))}
+const termSel=T=>`<div class="box noprint"><label>Term</label><select onchange="F.vt=this.value;draw()" style="max-width:300px">${termList().map(k=>`<option value="${k}" ${k==T?'selected':''}>${esc(k.replace('|',', '))}${isClosed(k)?' (closed)':''}</option>`).join('')}</select></div>`;
+
+function lt(n){$('l1').style.display=n==1?'':'none';$('l2').style.display=n==2?'':'none';$('t1').className=n==1?'':'g';$('t2').className=n==2?'':'g';window.mode=n}
+window.mode=1;
+async function doLogin(){if(SERVER)await pull();
+ if(mode==1){const s=db.staff.find(x=>x.u==v('lu')&&x.p==$('lp').value);if(!s)return msg('Wrong username or password.');me=s;page='dash'}
+ else{const s=db.students.find(x=>x.reg.toLowerCase()==v('sr').toLowerCase()&&x.name.toLowerCase()==v('sn').toLowerCase());if(!s)return msg('Reg. No. and name do not match a registered student.');me={r:'student',n:s.name,reg:s.reg};page='portal'}
+ $('login').style.display='none';$('app').style.display='block';draw()}
+function logout(){me=null;stopCam();$('app').style.display='none';$('login').style.display='grid';$('lp').value=''}
+function go(p){page=p;EDIT='';photo='';draw()}
+function ensure(){const D=def();for(const k in D)if(db[k]==null||typeof db[k]!=typeof D[k]||Array.isArray(db[k])!=Array.isArray(D[k]))db[k]=D[k]}
+function draw(){ensure();
+ const r=me.r,M={admin:[['dash','Dashboard'],['stu','Students Database'],['fin','Finances'],['adm','Admin'],['edu','Educator'],['rc','Report Cards'],['lib','E-Library'],['portal','Student Portal']],
+ educator:[['edu','Educator'],['rc','Report Cards'],['lib','E-Library']],finance:[['dash','Dashboard'],['fin','Finances']],student:[['portal','Student Portal'],['lib','E-Library']]}[r];
+ if(!M.some(x=>x[0]==page))page=M[0][0];
+ $('side').innerHTML=`<div class="b">FAZAG SCHOOLS<br><small style="font-weight:400;color:var(--mu)">${esc(me.n)} (${r})</small></div>`+M.map(x=>`<a class="${x[0]==page?'on':''}" onclick="go('${x[0]}')">${x[1]}</a>`).join('')+`<a onclick="logout()" style="margin-top:auto;color:var(--mu)">Log out</a>`;
+ try{$('main').innerHTML=({dash:vDash,stu:vStu,fin:vFin,adm:vAdm,edu:vEdu,portal:vPortal,rc:vRC,lib:vLib})[page]();{const m=$('main');m.classList.toggle('hs',!!m.querySelector('.sub'))}
+ if(page=='stu')fillStu();if(page=='fin')fillFin();if(page=='edu'&&$('atb'))fillAtt()}catch(e){$('main').innerHTML='<div class="box"><b>This page could not open.</b><br>Error: '+esc(e.message)+'<br>Please send this message to your developer.</div>'}}
+
+/* DASHBOARD */
+function vDash(){const i=db.tx.filter(t=>t.type=='Receipt').reduce((a,t)=>a+t.amt,0),o=db.tx.filter(t=>t.type=='Payment').reduce((a,t)=>a+t.amt,0);
+ return `<h2>Dashboard</h2><div class="box"><b>${esc(db.set.session)}</b> – ${esc(db.set.term)}</div><div class="st"><div><b>${db.students.filter(isAct).length}</b>Active students</div><div><b>${db.staff.length-1}</b>Staff</div><div><b>${db.classes.length}</b>Classes</div><div><b>${db.subjects.length}</b>Subjects</div>${me.r!='educator'?`<div><b>₦${(i-o).toLocaleString()}</b>Net balance</div>`:''}</div>${shareBox()}`}
+
+/* STUDENTS */
+const nextReg=()=>'FSTS/'+String(Math.max(0,...db.students.map(s=>parseInt(s.reg.split('/')[1])||0))+1).padStart(4,'0');
+function vStu(){const a=me.r=='admin',e=db.students.find(x=>x.reg==EDIT)||{};
+ return `<h2>Students Database</h2>${sub(a?[['s-reg','Register student'],['s-db','Students table']]:[['s-db','Students table']])}`+(a?`<div class="box" id="s-reg"><h3 style="margin-top:0">${EDIT?'Edit student '+EDIT:'Register student'}</h3><div class="grid">
+ <div><label>Reg. No. (automatic)</label><input id="reg" readonly value="${EDIT||nextReg()}"></div><div><label>Name</label><input id="nm" value="${esc(e.name||'')}"></div>
+ <div><label>Gender</label><select id="gd">${opts(['Male','Female'],e.gender)}</select></div><div><label>Date of birth</label><input id="dob" type="date" value="${e.dob||''}"></div>
+ <div><label>Class</label><select id="cls">${opts(db.classes,e.cls)}</select></div><div><label>Parent name</label><input id="pn" value="${esc(e.parent||'')}"></div>
+ <div><label>Phone no.</label><input id="ph" value="${esc(e.phone||'')}"></div><div><label>Email address</label><input id="em" type="email" value="${esc(e.email||'')}"></div>
+ <div><label>Date admitted</label><input id="adm" type="date" value="${e.adm||e.date||new Date().toISOString().slice(0,10)}"></div><div><label>Passport photo (upload)</label><input type="file" id="pf" accept="image/*" onchange="upPhoto(this)"></div></div><br>
+ <button class="g" onclick="startCam()">Use camera</button> <button class="g" id="snapb" style="display:none" onclick="snap()">Snap photo</button>
+ <video id="vid" autoplay playsinline style="display:none;max-width:200px;margin-top:8px"></video> <img id="prev" class="ph" ${photo?`src="${photo}"`:''} style="${photo?'':'display:none;'}width:80px;height:96px;margin-left:8px">
+ <br><br><button onclick="addStu()">${EDIT?'Save changes':'Register student'}</button>${EDIT?' <button class="g" onclick="EDIT=\'\';photo=\'\';draw()">Cancel</button>':''}</div>`:'')+
+ `<div class="box" id="s-db"><div class="grid"><div><label>Name</label><input id="fn" placeholder="Search by name" oninput="fillStu()"></div><div><label>Reg. No.</label><input id="fr" placeholder="Search e.g. 0012" oninput="fillStu()"></div><div><label>Class</label><select id="fc" onchange="fillStu()">${opts(db.classes,'','All classes')}</select></div>
+ <div><label>Month admitted</label><input id="fm" type="month" onchange="fillStu()"></div><div><label>Term</label><select id="ft" onchange="fillStu()">${opts(TERMS,'','All terms')}</select></div>
+ ${me.r=='educator'?'':`<div><label>Status</label><select id="fs" onchange="fillStu()"><option value="">All</option><option>Active</option><option>Inactive</option></select></div>`}<div><button class="g" onclick="fillStu(1)">Clear filters</button></div><div><button onclick="expStu('xls')">Export Excel</button> <button onclick="expStu('pdf')">Export PDF</button></div></div><br><div class="tw"><table id="stb"></table></div></div>`}
+function upPhoto(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>shrink(r.result);r.readAsDataURL(f)}
+function shrink(src){const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=200;c.height=240;const x=c.getContext('2d'),s=Math.max(200/im.width,240/im.height),w=im.width*s,h=im.height*s;x.drawImage(im,(200-w)/2,(240-h)/2,w,h);photo=c.toDataURL('image/jpeg',.8);$('prev').src=photo;$('prev').style.display='inline'};im.src=src}
+async function startCam(){try{stream=await navigator.mediaDevices.getUserMedia({video:true});$('vid').srcObject=stream;$('vid').style.display='block';$('snapb').style.display='inline-block'}catch(e){msg('Camera not available. Upload a photo instead.')}}
+function snap(){const c=document.createElement('canvas'),vd=$('vid');c.width=vd.videoWidth;c.height=vd.videoHeight;c.getContext('2d').drawImage(vd,0,0);shrink(c.toDataURL());stopCam()}
+function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}if($('vid'))$('vid').style.display='none';if($('snapb'))$('snapb').style.display='none'}
+function addStu(){const s={status:'Active',reg:EDIT||nextReg(),adm:v('adm'),name:v('nm'),gender:v('gd'),dob:v('dob'),cls:v('cls'),parent:v('pn'),phone:v('ph'),email:v('em'),photo,date:new Date().toISOString().slice(0,10),term:db.set.term,session:db.set.session};
+ if(!s.name||!s.dob||!s.adm||!s.parent||!s.phone)return msg('Fill in name, date of birth, date admitted, parent name and phone.');
+ const oi=db.students.findIndex(x=>x.reg==s.reg);if(oi>=0&&!EDIT)return msg('Duplicate Reg. No.');
+ if(EDIT&&oi>=0){const o=db.students[oi];s.date=o.date;s.term=o.term;s.session=o.session;s.status=o.status||'Active';s.reason=o.reason||'';s.exit=o.exit||'';db.students[oi]=s}else db.students.push(s);photo='';stopCam();save();msg(EDIT?'Student updated':'Registered '+s.reg);EDIT='';draw()}
+function editStu(r){EDIT=r;photo=(db.students.find(x=>x.reg==r)||{}).photo||'';draw();scrollTo(0,0)}
+function fillStu(clr){if(clr){['fn','fr','fc','fm','ft','fs'].forEach(i=>{if($(i))$(i).value=''})}
+ let a=db.students.filter(s=>(!v('fn')||s.name.toLowerCase().includes(v('fn').toLowerCase()))&&(!v('fr')||s.reg.toLowerCase().includes(v('fr').toLowerCase()))&&(!v('fc')||s.cls==v('fc'))&&(!v('fm')||(s.adm||s.date).slice(0,7)==v('fm'))&&(!v('ft')||s.term==v('ft'))&&(me.r!='educator'||isAct(s))&&(!v('fs')||(isAct(s)?'Active':'Inactive')==v('fs')));
+ FST=a;$('stb').innerHTML=`<thead><tr><th>Photo</th><th>Reg. No.</th><th>Name</th><th>Gender</th><th>DoB</th><th>Class</th><th>Parent</th><th>Phone</th><th>Email</th><th>Term</th><th>Date admitted</th><th>Status</th>${me.r=='admin'?'<th></th>':''}</tr></thead><tbody>`+
+ a.map(s=>`<tr><td>${s.photo?`<img class="ph" src="${s.photo}">`:'–'}</td><td>${s.reg}</td><td>${esc(s.name)}</td><td>${s.gender}</td><td>${s.dob}</td><td>${esc(s.cls)}</td><td>${esc(s.parent)}</td><td>${esc(s.phone)}</td><td>${esc(s.email)}</td><td>${s.term}</td><td>${s.adm||s.date}</td><td class="${isAct(s)?'pos':'neg'}">${isAct(s)?'Active':'Inactive'+(s.reason?' ('+esc(s.reason)+')':'')}</td>${me.r=='admin'?`<td><button class="g" onclick="editStu('${s.reg}')">Edit</button> <button class="${isAct(s)?'d':''}" onclick="toggleStu('${s.reg}')">${isAct(s)?'Make inactive':'Reactivate'}</button></td>`:''}</tr>`).join('')+`</tbody><tfoot><tr><td colspan="12">Total students: ${a.length} (Active: ${a.filter(isAct).length}, Inactive: ${a.filter(s=>!isAct(s)).length})</td></tr></tfoot>`}
+function expStu(kind){if(!FST.length)return msg('No students to export.');const day=new Date().toISOString().slice(0,10),stt=s=>isAct(s)?'Active':'Inactive'+(s.reason?' ('+s.reason+')':'');
+ if(kind=='xls'){const H=['Reg. No.','Name','Gender','Date of birth','Class','Parent name','Phone','Email','Term','Date admitted','Status'],R=FST.map(s=>[s.reg,s.name,s.gender,s.dob,s.cls,s.parent,s.phone,s.email,s.term,s.adm||s.date,stt(s)]);
+  const body='<html><head><meta charset="utf-8"></head><body><table border="1"><tr>'+H.map(x=>`<th>${x}</th>`).join('')+'</tr>'+R.map(r=>'<tr>'+r.map(c=>`<td>${esc(c)}</td>`).join('')+'</tr>').join('')+`<tr><td colspan="11"><b>Total students: ${R.length}</b></td></tr></table></body></html>`;
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([body],{type:'application/vnd.ms-excel'}));a.download='students-'+day+'.xls';a.click()}
+ else pdfTable('Student list',['Reg. No.','Name','Gender','Date of birth','Class','Parent name','Phone','Admitted','Status'],FST.map(s=>[s.reg,s.name,s.gender,s.dob,s.cls,s.parent,s.phone,s.adm||s.date,stt(s)]),[70,165,45,75,55,120,85,65,90],'students-'+day+'.pdf')}
+function pdfTable(title,H,R,W,name,label){const PW=842,PH=595,M=30,RH=16,per=26,TW=W.reduce((a,b)=>a+b,0),
+ T=s=>'('+String(s==null?'':s).replace(/[^\x20-\x7e]/g,'?').replace(/([()\\])/g,'\\$1')+')',
+ fit=(s,w)=>{s=String(s==null?'':s);const m=Math.floor((w-4)/4.6);return s.length>m?s.slice(0,m-1)+'.':s},pages=[];
+ for(let i=0;i<Math.max(R.length,1);i+=per)pages.push(R.slice(i,i+per));
+ const L=[],offs=[];let len=0;const add=x=>{const b=typeof x=='string'?new TextEncoder().encode(x):x;L.push(b);len+=b.length},o=(n,s)=>{offs[n]=len;add(n+' 0 obj\n'+s+'\nendobj\n')};
+ add('%PDF-1.4\n');o(1,'<< /Type /Catalog /Pages 2 0 R >>');o(2,'<< /Type /Pages /Kids ['+pages.map((_,i)=>(5+2*i)+' 0 R').join(' ')+'] /Count '+pages.length+' >>');
+ o(3,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');o(4,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+ pages.forEach((pg,pi)=>{let c='',y=PH-M;const tx=(f,z,x,yy,s,col)=>{c+=`${col||'0 g'}\nBT /${f} ${z} Tf ${x} ${yy} Td ${T(s)} Tj ET\n`};
+  if(pi==0){tx('F2',14,M,y-10,'FAZAG SCHOOLS OF SCIENCE AND TECHNICAL SKILLS');tx('F1',10,M,y-26,title+'   |   Printed: '+new Date().toISOString().slice(0,10));y-=44}else{tx('F1',9,M,y-8,title+' (continued)');y-=24}
+  c+=`0.07 0.14 0.37 rg ${M} ${y-RH+4} ${TW} ${RH} re f\n`;let x=M;H.forEach((hh,k)=>{tx('F2',8,x+3,y-8,fit(hh,W[k]),'1 g');x+=W[k]});y-=RH;
+  pg.forEach((r,ri)=>{if(ri%2)c+=`0.94 0.95 0.98 rg ${M} ${y-RH+4} ${TW} ${RH} re f\n`;let x=M;r.forEach((cell,k)=>{tx('F1',8,x+3,y-8,fit(cell,W[k]));x+=W[k]});y-=RH});
+  if(pi==pages.length-1)tx('F2',9,M,y-14,'Total '+(label||'students')+': '+R.length);tx('F1',8,PW-M-60,16,'Page '+(pi+1)+' of '+pages.length);
+  o(5+2*pi,`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Contents ${6+2*pi} 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>`);o(6+2*pi,`<< /Length ${c.length} >>\nstream\n${c}endstream`)});
+ const n=5+2*pages.length,xo=len;add(`xref\n0 ${n}\n0000000000 65535 f \n`+offs.slice(1,n).map(f=>String(f).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<< /Size ${n} /Root 1 0 R >>\nstartxref\n${xo}\n%%EOF`);
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(L,{type:'application/pdf'}));a.download=name;a.click()}
+function toggleStu(r){const s=db.students.find(x=>x.reg==r);if(!s)return;
+ if(isAct(s)){const w=(prompt('Reason for making '+s.name+' inactive. Type: Left or Graduated','Graduated')||'').trim();if(!/^(left|graduated)$/i.test(w))return msg('Cancelled. Type Left or Graduated.');s.status='Inactive';s.reason=w[0].toUpperCase()+w.slice(1).toLowerCase();s.exit=new Date().toISOString().slice(0,10)}
+ else{if(!confirm('Make '+s.name+' active again?'))return;s.status='Active';s.reason='';s.exit=''}
+ save();draw()}
+
+/* FINANCE */
+function vFin(){return `<h2>Finances</h2>${sub([['f-rec','Record transaction'],['f-list','Transactions']])}<div class="box" id="f-rec"><h3 style="margin-top:0">Record transaction</h3><div class="grid">
+ <div><label>Date</label><input id="td" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+ <div><label>Transaction type</label><select id="tt"><option value="Receipt">Receipt (add)</option><option value="Payment">Payment (reduce)</option></select></div>
+ <div><label>Payer / Payee</label><input id="tp"></div><div><label>Reg. No. (active students)</label><select id="tr"><option value="">Not a student</option>${db.students.filter(isAct).map(s=>`<option value="${s.reg}">${s.reg} - ${esc(s.name)}</option>`).join('')}</select></div>
+ <div><label>Transaction class</label><select id="tc" onchange="$('tcn').style.display=this.value=='__new'?'block':'none'"><option value="">Select class</option>${db.cats.map(c=>`<option>${esc(c)}</option>`).join('')}<option value="__new">+ Add new class...</option></select><input id="tcn" placeholder="Type new class name" style="display:none;margin-top:6px"></div>
+ <div><label>Amount (₦)</label><input id="ta" type="number" min="0"></div><div><button onclick="addTx()">Save transaction</button></div></div></div>
+ <div class="box" id="f-list"><div class="grid"><div><label>Date</label><input id="xd" type="date" onchange="fillFin()"></div><div><label>Type</label><select id="xt" onchange="fillFin()"><option value="">All</option><option>Receipt</option><option>Payment</option></select></div>
+ <div><label>Reg. No.</label><input id="xr" oninput="fillFin()"></div><div><label>Payer/Payee</label><input id="xp" oninput="fillFin()"></div>
+ <div><label>Class</label><select id="xc" onchange="fillFin()">${opts(db.cats,'','All')}</select></div><div><button class="g" onclick="['xd','xt','xr','xp','xc'].forEach(i=>$(i).value='');fillFin()">Clear filters</button></div><div><button onclick="expTx('csv')">Export CSV</button> <button onclick="expTx('xls')">Export Excel</button></div></div><br><div class="tw"><table id="ftb"></table></div></div>`}
+function addTx(){const t={id:Date.now(),date:v('td'),type:v('tt'),who:v('tp'),reg:v('tr').toUpperCase(),cat:v('tc')=='__new'?v('tcn'):v('tc'),amt:parseFloat($('ta').value)};
+ if(!t.date||!t.who||!t.cat||!(t.amt>0))return msg('Enter date, payer/payee, class and a valid amount.');
+ if(t.reg&&!db.students.some(s=>s.reg==t.reg))return msg('Reg. No. not found.');
+ if(!db.cats.includes(t.cat))db.cats.push(t.cat);db.tx.push(t);save();msg('Transaction saved');draw();if(t.type=='Receipt')receiptPDF(t.id)}
+function fillFin(){const a=db.tx.filter(t=>(!v('xd')||t.date==v('xd'))&&(!v('xt')||t.type==v('xt'))&&(!v('xr')||t.reg.includes(v('xr').toUpperCase()))&&(!v('xp')||t.who.toLowerCase().includes(v('xp').toLowerCase()))&&(!v('xc')||t.cat==v('xc'))).sort((x,y)=>y.date.localeCompare(x.date));
+ FTX=a;const i=a.filter(t=>t.type=='Receipt').reduce((s,t)=>s+t.amt,0),o=a.filter(t=>t.type=='Payment').reduce((s,t)=>s+t.amt,0),n=x=>'₦'+x.toLocaleString();
+ $('ftb').innerHTML=`<thead><tr><th>Date</th><th>Type</th><th>Payer/Payee</th><th>Reg. No.</th><th>Class</th><th>Amount</th><th></th></tr></thead><tbody>`+a.map(t=>`<tr><td>${t.date}</td><td class="${t.type=='Receipt'?'pos':'neg'}">${t.type}</td><td>${esc(t.who)}</td><td>${t.reg||'–'}</td><td>${esc(t.cat)}</td><td>${n(t.amt)}</td><td>${t.type=='Receipt'?`<button class="g" onclick="receiptPDF(${t.id})">Receipt PDF</button> `:''}${me.r=='admin'?`<button class="d" onclick="delTx(${t.id})">Delete</button>`:''}</td></tr>`).join('')+
+ `</tbody><tfoot><tr><td colspan="7">Total inflows: ${n(i)} &nbsp;|&nbsp; Total outflows: ${n(o)} &nbsp;|&nbsp; Net balance: ${n(i-o)}</td></tr></tfoot>`}
+async function receiptPDF(id){const t=db.tx.find(x=>x.id==id);if(!t)return;
+ const st=db.students.find(s=>s.reg==t.reg)||{},no='RCP-'+String(db.tx.filter(x=>x.type=='Receipt').sort((a,b)=>a.id-b.id).findIndex(x=>x.id==id)+1).padStart(4,'0');let img=null;
+ if(db.logo){try{img=await new Promise((ok,bad)=>{const im=new Image();im.onload=()=>{const cv=document.createElement('canvas');cv.width=im.width;cv.height=im.height;const g=cv.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,cv.width,cv.height);g.drawImage(im,0,0);ok({w:cv.width,h:cv.height,b:Uint8Array.from(atob(cv.toDataURL('image/jpeg',.92).split(',')[1]),ch=>ch.charCodeAt(0))})};im.onerror=bad;im.src=db.logo})}catch(e){img=null}}
+ const T=s=>'('+String(s==null?'':s).replace(/[^\x20-\x7e]/g,'?').replace(/([()\\])/g,'\\$1')+')',x0=img?138:50,lw=img?Math.min(75,60*img.w/img.h):0;
+ let c='0.07 0.14 0.37 RG 2 w 30 420 535 400 re S\n';const tx=(f,z,x,y,s)=>{c+=`BT /${f} ${z} Tf ${x} ${y} Td ${T(s)} Tj ET\n`};
+ if(img)c+=`q ${lw.toFixed(1)} 0 0 60 50 755 cm /Im1 Do Q\n`;
+ tx('F2',14,x0,790,'FAZAG SCHOOLS OF SCIENCE AND TECHNICAL SKILLS');tx('F1',10,x0,772,'Official payment receipt');
+ c+='0.95 0.71 0.27 RG 2 w 50 742 m 545 742 l S\n';
+ tx('F2',18,50,710,'PAYMENT RECEIPT');tx('F1',11,390,710,'Receipt No: '+no);tx('F1',11,390,694,'Date: '+t.date);
+ [['Received from',t.who],['Reg. No.',t.reg||'N/A'],['Student name',st.name||'N/A'],['Class',st.cls||'N/A'],['Payment for',t.cat]].forEach((r,i)=>{tx('F2',11,50,660-i*26,r[0]+':');tx('F1',11,170,660-i*26,r[1])});
+ c+='0.95 0.94 0.89 rg 50 490 495 40 re f\n0 0 0 rg\n';tx('F2',14,60,505,'AMOUNT RECEIVED:  NGN '+t.amt.toLocaleString('en-US',{minimumFractionDigits:2}));
+ tx('F1',10,50,470,'Thank you for your payment.');c+='0 0 0 RG 1 w 350 450 m 545 450 l S\n';tx('F1',9,350,438,'Authorised signature');tx('F1',9,50,438,'Issued by: '+me.n);
+ const L=[],offs=[];let len=0;const add=x=>{const b=typeof x=='string'?new TextEncoder().encode(x):x;L.push(b);len+=b.length},o=(n,s)=>{offs[n]=len;add(n+' 0 obj\n'+s+'\nendobj\n')};
+ add('%PDF-1.4\n');o(1,'<< /Type /Catalog /Pages 2 0 R >>');o(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+ o(3,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 6 0 R /Resources << /Font << /F1 4 0 R /F2 5 0 R >>'+(img?' /XObject << /Im1 7 0 R >>':'')+' >> >>');
+ o(4,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');o(5,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');o(6,`<< /Length ${c.length} >>\nstream\n${c}endstream`);
+ if(img){offs[7]=len;add(`7 0 obj\n<< /Type /XObject /Subtype /Image /Width ${img.w} /Height ${img.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${img.b.length} >>\nstream\n`);add(img.b);add('\nendstream\nendobj\n')}
+ const n=img?8:7,xo=len;add(`xref\n0 ${n}\n0000000000 65535 f \n`+offs.slice(1,n).map(f=>String(f).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<< /Size ${n} /Root 1 0 R >>\nstartxref\n${xo}\n%%EOF`);
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(L,{type:'application/pdf'}));a.download=no+'.pdf';a.click()}
+function expTx(kind){if(!FTX.length)return msg('No transactions to export.');
+ const H=['Date','Type','Payer/Payee','Reg. No.','Class','Amount'],R=FTX.map(t=>[t.date,t.type,t.who,t.reg||'',t.cat,t.amt]),
+ i=FTX.filter(t=>t.type=='Receipt').reduce((s,t)=>s+t.amt,0),o=FTX.filter(t=>t.type=='Payment').reduce((s,t)=>s+t.amt,0);
+ R.push([''],['Total inflows','','','','',i],['Total outflows','','','','',o],['Net balance','','','','',i-o]);
+ let body,mime,ext;
+ if(kind=='csv'){body='\ufeff'+[H,...R].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n');mime='text/csv;charset=utf-8';ext='csv'}
+ else{body='<html><head><meta charset="utf-8"></head><body><table border="1"><tr>'+H.map(x=>`<th>${x}</th>`).join('')+'</tr>'+R.map(r=>'<tr>'+r.map(c=>`<td>${esc(c)}</td>`).join('')+'</tr>').join('')+'</table></body></html>';mime='application/vnd.ms-excel';ext='xls'}
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([body],{type:mime}));a.download=`transactions-${new Date().toISOString().slice(0,10)}.${ext}`;a.click()}
+function delTx(id){if(confirm('Delete this transaction?')){db.tx=db.tx.filter(t=>t.id!=id);save();draw()}}
+
+/* ADMIN */
+function vAdm(){const ed=db.staff.filter(s=>s.r!='admin');
+ return `<h2>Admin</h2>${sub([['a-logo','School logo'],['a-term','Term and session'],['a-staff','Staff'],['a-cls','Classes'],['a-pub','Publish results'],['a-bk','Backup and restore'],['a-pw','Change password']])}<div class="box" id="a-logo"><h3 style="margin-top:0">School logo</h3><div class="grid"><div><label>Upload logo (PNG or JPG)</label><input type="file" accept="image/*" onchange="upLogo(this)"></div><div>${db.logo?`<img src="${db.logo}" style="height:60px"> <button class="d" onclick="db.logo='';save();draw()">Remove</button>`:'No logo yet.'}</div></div></div><div class="box" id="a-term"><h3 style="margin-top:0">Academic term and session</h3><div class="grid">
+ <div><label>Term</label><select id="st">${opts(TERMS,db.set.term)}</select></div><div><label>Session (e.g. 2026/2027)</label><input id="ss" value="${esc(db.set.session)}"></div><div><button onclick="setTerm()">Save / change term</button></div></div><p style="color:var(--mu)">Changing the term closes the current one permanently. Closed terms: ${Object.keys(closedMap()).map(k=>esc(k.replace('|',', '))).join(' · ')||'none'}</p></div>
+ <div class="box" id="a-staff"><h3 style="margin-top:0">Add staff</h3><div class="grid"><div><label>Full name</label><input id="sfn"></div><div><label>Username</label><input id="sfu"></div><div><label>Password</label><input id="sfp"></div>
+ <div><label>Role</label><select id="sfr"><option value="educator">Educator</option><option value="finance">Finance</option></select></div><div><button onclick="addStaff()">Add staff</button></div></div><br>
+ <div class="tw"><table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Allocated classes</th><th>Allocate class</th><th></th></tr></thead><tbody>${ed.map(s=>`<tr><td>${esc(s.n)}</td><td>${esc(s.u)}</td><td>${s.r}</td><td>${s.c.map(c=>`${esc(c)} <a style="color:var(--bad);cursor:pointer" onclick="unalloc('${s.u}','${esc(c)}')">✕</a>`).join(', ')||'–'}</td>
+ <td>${s.r=='educator'?`<select id="al_${s.u}" style="width:auto">${opts(db.classes)}</select> <button class="g" onclick="alloc('${s.u}')">Allocate</button>`:'–'}</td><td><button class="d" onclick="delStaff('${s.u}')">Remove</button></td></tr>`).join('')||'<tr><td colspan="6">No staff yet.</td></tr>'}</tbody></table></div></div>
+ <div class="box" id="a-cls"><h3 style="margin-top:0">Classes</h3><div class="grid"><div><label>Section</label><select id="ncs"><option value="">Select section</option>${opts(SECS)}</select></div><div><label>New class name</label><input id="nc"></div><div><button onclick="addClass()">Add class</button></div></div><br><div class="tw"><table><thead><tr><th>Class</th><th>Section</th></tr></thead><tbody>${db.classes.map(c=>`<tr><td>${esc(c)}</td><td><select onchange="setCsec('${esc(c)}',this.value)" style="width:auto">${opts(SECS,clsSec(c),'Not set')}</select></td></tr>`).join('')}</tbody></table></div></div>
+ <div class="box" id="a-pub"><h3 style="margin-top:0">Publish results (${esc(db.set.term)}, ${esc(db.set.session)})</h3><div class="tw"><table><thead><tr><th>Class</th><th>Status</th><th></th></tr></thead><tbody>${db.classes.map(c=>{const p=db.pub[pk(c)];return `<tr><td>${esc(c)}</td><td class="${p?'pos':''}">${p?'Published':'Not published'}</td><td><button class="${p?'g':''}" onclick="pub('${esc(c)}')">${p?'Unpublish':'Publish'}</button></td></tr>`}).join('')}</tbody></table></div></div>${bkBox()}${pwBox()}`}
+const bkBox=()=>`<div class="box" id="a-bk"><h3 style="margin-top:0">Backup and restore</h3><p style="color:var(--mu)">A backup is one file containing all school records (students, staff, scores, finances, settings) and the uploaded e-books. Download one regularly and keep it on a flash drive. <b>Restore replaces everything currently in the system</b> with the contents of the backup file.</p><button onclick="backup()">Download backup</button> <button class="d" style="padding:8px 14px" onclick="$('rfile').click()">Restore from backup</button><input type="file" id="rfile" accept=".json" hidden onchange="restore(this)"></div>`;
+async function backup(){msg('Preparing backup...');const books={};
+ for(const b of db.books||[]){try{const r=await fetch(bookUrl(b.id));if(r.ok){const u=new Uint8Array(await r.arrayBuffer());let s='';for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));books[b.id]=btoa(s)}}catch(e){}}
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([J({app:'fazag-backup',v:1,date:new Date().toISOString(),data:db,books})],{type:'application/json'}));a.download='fazag-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();msg('Backup downloaded. Keep it safe.')}
+function restore(el){const f=el.files[0];if(!f)return;if(!confirm('Restoring will REPLACE all current data with the backup. This cannot be undone. Continue?')){el.value='';return}
+ const r=new FileReader();r.onload=async()=>{let d;try{d=JSON.parse(r.result);if(d.app!='fazag-backup'||!d.data||!Array.isArray(d.data.staff))throw 0}catch(e){el.value='';return msg('That is not a valid backup file.')}
+  msg('Restoring...');for(const id in d.books||{}){try{await sb.storage.from('books').upload(id+'.pdf',new Blob([Uint8Array.from(atob(d.books[id]),c=>c.charCodeAt(0))],{type:'application/pdf'}),{contentType:'application/pdf',upsert:true})}catch(e){}}
+  const nd=Object.assign(def(),d.data);try{if(SERVER){await sb.from('school_data').delete().neq('k','');base={};db=nd;await push();adopt(nd)}else adopt(nd)}catch(e){el.value='';return msg('Restore failed. Is the school server running?')}
+  el.value='';if(!me)return;msg('Backup restored.');draw()};r.readAsText(f)}
+const pwBox=()=>`<div class="box" id="a-pw"><h3 style="margin-top:0">Change my password</h3><div class="grid"><div><label>New password (8+ characters)</label><input id="npw" type="password"></div><div><label>Repeat new password</label><input id="npw2" type="password"></div><div><button onclick="chPw()">Change password</button></div></div></div>`;
+function chPw(){const a=$('npw').value,b=$('npw2').value;if(a.length<8)return msg('Use at least 8 characters.');if(a!=b)return msg('The two passwords do not match.');me.p=a;save();$('npw').value='';$('npw2').value='';msg('Password changed. Use it next time you log in.')}
+const pk=c=>`${c}|${db.set.term}|${db.set.session}`;
+function upLogo(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),k=Math.min(1,200/im.height);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);db.logo=c.toDataURL('image/png');save();draw()};im.src=r.result};r.readAsDataURL(f)}
+function setTerm(){const n=v('st'),ss=v('ss'),nT=n+'|'+ss,c=curT();if(!ss)return msg('Enter the session.');
+ if(isClosed(nT))return msg('That term is closed permanently and cannot be reopened.');
+ if(nT!=c){if(!confirm('Changing the term will CLOSE '+db.set.term+', '+db.set.session+' permanently. Its results will be locked and can no longer be edited or deleted. Continue?'))return;closedMap()[c]=1}
+ db.set={...db.set,term:n,session:ss};save();msg('Term saved');draw()}
+function addStaff(){const s={n:v('sfn'),u:v('sfu'),p:v('sfp'),r:v('sfr'),c:[]};if(!s.n||!s.u||!s.p)return msg('Fill in all staff fields.');if(db.staff.some(x=>x.u==s.u))return msg('Username already taken.');db.staff.push(s);save();draw()}
+function delStaff(u){if(confirm('Remove '+u+'?')){db.staff=db.staff.filter(s=>s.u!=u);save();draw()}}
+function alloc(u){const s=db.staff.find(x=>x.u==u),c=$('al_'+u).value;if(!s.c.includes(c))s.c.push(c);save();draw()}
+function unalloc(u,c){const s=db.staff.find(x=>x.u==u);s.c=s.c.filter(x=>x!=c);save();draw()}
+function addClass(){const c=v('nc'),s=v('ncs');if(!c||db.classes.includes(c))return msg('Enter a new class name.');if(!s)return msg('Select a section.');db.classes.push(c);(db.csec=db.csec||{})[c]=s;save();draw()}
+function setCsec(c,s){(db.csec=db.csec||{})[c]=s;save();draw()}
+function pub(c){const k=pk(c);db.pub[k]=db.pub[k]?0:1;save();draw()}
+
+/* EDUCATOR */
+const myCls=()=>me.r=='admin'?db.classes:(me.c||[]);
+function vEdu(){const cl=myCls();if(!cl.includes(E.cl))E.cl=cl[0]||'';const SB=subsFor(E.cl);if(!SB.includes(E.sub))E.sub=SB[0]||'';
+ const PG=['e-sub','e-sc','e-ed','e-rec','e-tr','e-cm','e-at','e-attrec'];if(!PG.includes(E.pg))E.pg='e-sc';
+ const st=db.students.filter(s=>s.cls==E.cl&&isAct(s)),T=`${db.set.term}|${db.set.session}`,pg=E.pg,
+ nav=`<h2>Educator</h2>${subp([['e-sub','Subjects'],['e-sc','Record scores'],['e-ed','Edit results'],['e-rec','Recorded results'],['e-tr','Traits/Skills'],['e-cm','Class Management',[['e-at','Take Attendance'],['e-attrec','Attendance records']]]])}`;
+ if(!cl.length)return nav+'<div class="box">No class has been allocated to you yet. Ask the Admin to allocate one.</div>';
+ const sel=`<div class="box"><div class="grid"><div><label>Class</label><select onchange="E.cl=this.value;draw()">${opts(cl,E.cl)}</select></div>${pg=='e-sc'?`<div><label>Subject</label><select onchange="E.sub=this.value;draw()">${optSub(SB,E.sub)}</select></div>`:''}${pg=='e-at'?`<div><label>Select attendance date</label><input type="date" value="${E.date}" onchange="E.date=this.value;draw()"></div>`:''}</div></div>`;
+ if(pg=='e-sub')return nav+sel+`<div class="box" id="e-sub"><h3 style="margin-top:0">Subjects: ${esc(clsSec(E.cl)||'all sections')}</h3><p>${SB.map(s=>`${esc(subName(s))} <a style="color:var(--bad);cursor:pointer" onclick="delSub('${esc(s)}')">✕</a>`).join(' &nbsp; ')||'None yet.'}</p>
+ <div class="grid"><div><label>Section</label><select id="nsec">${opts(secs(),clsSec(E.cl))}</select></div><div><label>Subject name</label><input id="ns"></div><div><button onclick="addSub()">Add subject</button></div></div></div>`;
+ if(pg=='e-sc')return nav+sel+`<div class="box" id="e-sc"><h3 style="margin-top:0">Scores – ${esc(subName(E.sub))} (${esc(db.set.term)}, ${esc(db.set.session)})</h3><div class="tw"><table><thead><tr><th>Reg. No.</th><th>Name</th>${SC.map(x=>`<th>${x[1]} (${x[2]})</th>`).join('')}<th>Teacher's comment (all subjects)</th></tr></thead><tbody>
+ ${st.map((s,i)=>{const sc=db.scores[`${s.reg}|${E.sub}|${T}`]||{};return `<tr><td>${s.reg}</td><td>${esc(s.name)}</td>${SC.map(x=>`<td><input id="${x[0]}${i}" type="number" min="0" max="${x[2]}" value="${sc[x[0]]??''}" style="width:70px"></td>`).join('')}<td><input id="cm${i}" value="${esc(db.comments[`${s.reg}|${T}`]||'')}" style="min-width:240px"></td></tr>`}).join('')||'<tr><td colspan="8">No students in this class.</td></tr>'}</tbody></table></div><br><button onclick="saveScores()">Save scores and comments</button></div>`;
+ if(pg=='e-at')return nav+sel+`<div class="box" id="e-at"><h3 style="margin-top:0">Take Attendance – ${E.date}</h3><div class="tw"><table><thead><tr><th>Reg. No.</th><th>Name</th><th>Present</th></tr></thead><tbody>${st.map((s,i)=>{const a=db.att[`${s.reg}|${E.date}`];return `<tr><td>${s.reg}</td><td>${esc(s.name)}</td><td><input type="checkbox" id="pa${i}" ${a!==false?'checked':''} style="width:auto"></td></tr>`}).join('')}</tbody></table></div><br><button onclick="saveAtt()">Save attendance</button></div>`;
+ return nav+sel+(pg=='e-ed'?editBox(st):pg=='e-rec'?recBox():pg=='e-tr'?traitBox(st):pg=='e-cm'?cmBox(st):attBox())}
+const traitsHtml=(s,T)=>{const d=db.traits[s.reg+'|'+T]||{};return `<div style="margin-top:12px"><b>Traits / Skills</b> <small>(4 = Excellent, 3 = Very Good, 2 = Good, 1 = Struggling)</small><div class="ti">${TR.map(x=>`<span>${x[1]}<b>${d[x[0]]?d[x[0]]+' - '+TL4[d[x[0]]]:'-'}</b></span>`).join('')}</div></div>`};
+function traitBox(st){const T=curT();return `<div class="box"><h3 style="margin-top:0">Traits/Skills: ${esc(E.cl)} (${esc(T.replace('|',', '))})</h3><p style="color:var(--mu);margin:0 0 10px">Scale: 4 = Excellent, 3 = Very Good, 2 = Good, 1 = Struggling</p><div class="tw"><table><thead><tr><th>Reg. No.</th><th>Name</th>${TR.map(x=>`<th>${x[1]}</th>`).join('')}</tr></thead><tbody>${st.map((s,i)=>{const d=db.traits[`${s.reg}|${T}`]||{};return `<tr><td>${s.reg}</td><td>${esc(s.name)}</td>${TR.map(x=>`<td><select id="tt_${x[0]}_${i}" style="width:auto"><option value="">-</option>${[4,3,2,1].map(n=>`<option value="${n}" ${d[x[0]]==n?'selected':''}>${n} - ${TL4[n]}</option>`).join('')}</select></td>`).join('')}</tr>`}).join('')||'<tr><td colspan="9">No students in this class.</td></tr>'}</tbody></table></div><br><button onclick="saveTraits()">Save traits/skills</button></div>`}
+function saveTraits(){const T=curT();if(isClosed(T))return msg('This term is closed. Traits cannot be edited.');db.students.filter(s=>s.cls==E.cl&&isAct(s)).forEach((s,i)=>{const d={};TR.forEach(x=>{const n=$(`tt_${x[0]}_${i}`).value;if(n)d[x[0]]=+n});db.traits[`${s.reg}|${T}`]=Object.keys(d).length?d:null});save();msg('Traits/skills saved')}
+function cmBox(st){const d=new Date().toISOString().slice(0,10),pr=st.filter(s=>db.att[s.reg+'|'+d]===true).length,ab=st.filter(s=>db.att[s.reg+'|'+d]===false).length;
+ return `<div class="box"><h3 style="margin-top:0">Class Management: ${esc(E.cl)}</h3><div class="st"><div><b>${st.length}</b>Active students</div><div><b>${esc(clsSec(E.cl)||'-')}</b>Section</div><div><b>${pr}</b>Present today</div><div><b>${ab}</b>Absent today</div></div><p style="color:var(--mu)">Open the <b>Class Management</b> drop-down in the left menu to take attendance or view attendance records.</p></div>
+ <div class="box"><h3 style="margin-top:0">Class list</h3><div class="tw"><table><thead><tr><th>Reg. No.</th><th>Name</th><th>Gender</th><th>Date of birth</th><th>Parent</th><th>Phone</th></tr></thead><tbody>${st.map(s=>`<tr><td>${s.reg}</td><td>${esc(s.name)}</td><td>${s.gender}</td><td>${s.dob}</td><td>${esc(s.parent)}</td><td>${esc(s.phone)}</td></tr>`).join('')||'<tr><td colspan="6">No students in this class.</td></tr>'}</tbody><tfoot><tr><td colspan="6">Total students: ${st.length}</td></tr></tfoot></table></div></div>`}
+function attBox(){return `<div class="box" id="e-attrec"><h3 style="margin-top:0">Attendance records: ${esc(E.cl)}</h3><div class="grid"><div><label>From date</label><input id="atf" type="date" onchange="fillAtt()"></div><div><label>To date</label><input id="att" type="date" onchange="fillAtt()"></div><div><button class="g" onclick="$('atf').value='';$('att').value='';fillAtt()">Show all dates</button></div><div><button onclick="expAtt('xls')">Export Excel</button> <button onclick="expAtt('pdf')">Export PDF</button></div></div><p style="color:var(--mu);margin:10px 0 0;font-size:13px">Choose the same date in both boxes to see the whole class for that day, including children not yet marked.</p><br><div class="tw"><table id="atb"></table></div></div>`}
+function fillAtt(){const f=v('atf'),t=v('att'),R=[],ae=E.ae||{};
+ db.students.filter(s=>s.cls==E.cl&&isAct(s)).forEach(s=>{const days=Object.keys(db.att).filter(k=>k.startsWith(s.reg+'|')).map(k=>k.split('|')[1]).filter(d=>(!f||d>=f)&&(!t||d<=t));
+  days.forEach(d=>R.push([d,s.reg,s.name,db.att[s.reg+'|'+d]?'Present':'Absent']));if(f&&f==t&&!days.length)R.push([f,s.reg,s.name,'Not recorded'])});
+ R.sort((a,b)=>b[0].localeCompare(a[0])||a[2].localeCompare(b[2]));AR=R;ART='Attendance: '+E.cl+(f||t?', '+(f||'start')+' to '+(t||'latest'):'');const p=R.filter(r=>r[3]=='Present').length,ab=R.filter(r=>r[3]=='Absent').length;
+ $('atb').innerHTML=`<thead><tr><th>Date</th><th>Reg. No.</th><th>Name</th><th>Status</th><th></th></tr></thead><tbody>${R.map(r=>{const ed=ae.reg==r[1]&&ae.date==r[0];return `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${esc(r[2])}</td><td class="${r[3]=='Present'?'pos':r[3]=='Absent'?'neg':''}">${r[3]}</td><td>${ed?`<select id="aes" style="width:auto">${opts(['Present','Absent'],r[3]=='Absent'?'Absent':'Present')}</select> <button onclick="saveAttRow()">Save</button> <button class="g" onclick="E.ae=null;fillAtt()">Cancel</button>`:`<button class="g" onclick="editAtt('${r[1]}','${r[0]}')">${r[3]=='Not recorded'?'Mark':'Edit'}</button>`}</td></tr>`}).join('')||'<tr><td colspan="5">No attendance records found.</td></tr>'}</tbody><tfoot><tr><td colspan="5">Records: ${R.length} &nbsp;|&nbsp; Present: ${p} &nbsp;|&nbsp; Absent: ${ab}</td></tr></tfoot>`}
+function expAtt(kind){if(!AR.length)return msg('No attendance records to export.');const day=new Date().toISOString().slice(0,10),H=['Date','Reg. No.','Name','Status'];
+ if(kind=='xls'){const body='<html><head><meta charset="utf-8"></head><body><table border="1"><tr><th colspan="4">'+esc(ART)+'</th></tr><tr>'+H.map(x=>`<th>${x}</th>`).join('')+'</tr>'+AR.map(r=>'<tr>'+r.map(c=>`<td>${esc(c)}</td>`).join('')+'</tr>').join('')+'</table></body></html>',a=document.createElement('a');a.href=URL.createObjectURL(new Blob([body],{type:'application/vnd.ms-excel'}));a.download='attendance-'+day+'.xls';a.click()}
+ else pdfTable(ART,H,AR,[90,100,260,100],'attendance-'+day+'.pdf','records')}
+function editAtt(reg,d){E.ae={reg,date:d};fillAtt()}
+function saveAttRow(){const a=E.ae;if(!a)return;db.att[a.reg+'|'+a.date]=$('aes').value=='Present';E.ae=null;save();msg('Attendance updated');fillAtt()}
+function recBox(){const TL=termList(),vt=TL.includes(E.rt)?E.rt:curT(),cur=vt==curT(),sf=E.rsub&&E.rsub!='All subjects'?E.rsub:'';RR=[];
+ db.students.filter(s=>s.cls==E.cl&&(cur?isAct(s):true)).forEach(s=>stuRows(s,vt).forEach(x=>{if(!sf||x.u==sf){const t=rt(x.r);RR.push([s.reg,s.name,subName(x.u),...SC.map(c=>x.r[c[0]]??''),t,grade(t)])}}));
+ RRT='Results: '+E.cl+', '+vt.replace('|',', ')+(sf?', '+sf:'');
+ return `<div class="box" id="e-rec"><h3 style="margin-top:0">Recorded results: ${esc(E.cl)}, ${esc(vt.replace('|',', '))}${cur?'':' (closed)'}</h3><div class="grid"><div><label>Term</label><select onchange="E.rt=this.value;draw()">${TL.map(k=>`<option value="${k}" ${k==vt?'selected':''}>${esc(k.replace('|',', '))}${isClosed(k)?' (closed)':''}</option>`).join('')}</select></div><div><label>Subject</label><select onchange="E.rsub=this.value;draw()">${optSub(subsFor(E.cl),E.rsub,'All subjects')}</select></div><div><button onclick="expRes('xls')">Export Excel</button> <button onclick="expRes('pdf')">Export PDF</button></div></div><br><div class="tw"><table><thead><tr><th>Reg. No.</th><th>Name</th><th>Subject</th>${SC.map(c=>`<th>${c[1]} (${c[2]})</th>`).join('')}<th>Total</th><th>Grade</th></tr></thead><tbody>${RR.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')||'<tr><td colspan="10">No results recorded yet.</td></tr>'}</tbody><tfoot><tr><td colspan="10">Records: ${RR.length} &nbsp;|&nbsp; Average total: ${RR.length?(RR.reduce((a,r)=>a+r[8],0)/RR.length).toFixed(1):0}</td></tr></tfoot></table></div></div>`}
+function expRes(kind){if(!RR.length)return msg('No results to export.');const day=new Date().toISOString().slice(0,10);
+ if(kind=='xls'){const H=['Reg. No.','Name','Subject',...SC.map(c=>c[1]+' ('+c[2]+')'),'Total','Grade'],body='<html><head><meta charset="utf-8"></head><body><table border="1"><tr><th colspan="10">'+esc(RRT)+'</th></tr><tr>'+H.map(x=>`<th>${x}</th>`).join('')+'</tr>'+RR.map(r=>'<tr>'+r.map(c=>`<td>${esc(c)}</td>`).join('')+'</tr>').join('')+'</table></body></html>',a=document.createElement('a');a.href=URL.createObjectURL(new Blob([body],{type:'application/vnd.ms-excel'}));a.download='results-'+day+'.xls';a.click()}
+ else pdfTable(RRT,['Reg. No.','Name','Subject',...SC.map(c=>c[1]),'Total','Grade'],RR,[70,150,110,52,52,46,46,52,50,46],'results-'+day+'.pdf','records')}
+function editBox(st){if(!st.find(x=>x.reg==E.stu))E.stu=(st[0]||{}).reg||'';const T=`${db.set.term}|${db.set.session}`;
+ return st.length?`<div class="box" id="e-ed"><h3 style="margin-top:0">Edit a student's results (all subjects)</h3><div class="grid"><div><label>Student</label><select onchange="E.stu=this.value;draw()">${st.map(x=>`<option value="${x.reg}" ${x.reg==E.stu?'selected':''}>${esc(x.name)} (${x.reg})</option>`).join('')}</select></div></div><br><div class="tw"><table><thead><tr><th>Subject</th>${SC.map(x=>`<th>${x[1]} (${x[2]})</th>`).join('')}</tr></thead><tbody>${subsFor(E.cl).map((u,j)=>{const sc=db.scores[`${E.stu}|${u}|${T}`]||{};return `<tr><td>${esc(subName(u))}</td>${SC.map(x=>`<td><input id="e${x[0]}${j}" type="number" min="0" max="${x[2]}" value="${sc[x[0]]??''}" style="width:70px"></td>`).join('')}</tr>`}).join('')}</tbody></table></div><br><button onclick="saveStuRes()">Save changes</button> <small style="color:var(--mu)">Leave a whole row empty to clear that subject's result. Changes show immediately on published results.</small></div>`:''}
+function saveStuRes(){const T=`${db.set.term}|${db.set.session}`;if(isClosed(T))return msg('This term is closed. Results cannot be edited.');subsFor(E.cl).forEach((u,j)=>{const vs=SC.map(x=>$('e'+x[0]+j).value),k=`${E.stu}|${u}|${T}`;db.scores[k]=vs.some(x=>x!=='')?Object.fromEntries(SC.map((x,i)=>[x[0],Math.min(x[2],+vs[i]||0)])):null});save();msg('Results updated');draw()}
+function addSub(){const n=v('ns'),sec=v('nsec');if(!n)return msg('Type the subject name.');if(!sec)return msg('Select a section.');if(/[~|]/.test(n))return msg('Subject name cannot contain ~ or |.');
+ const id=n+'~'+sec;if(db.subjects.some(x=>x.toLowerCase()==id.toLowerCase()))return msg(n+' already exists in '+sec+'.');db.subjects.push(id);save();msg('Subject added to '+sec+' section');draw()}
+function delSub(s){if(confirm('Remove '+subName(s)+'?')){db.subjects=db.subjects.filter(x=>x!=s);save();draw()}}
+function saveScores(){const T=`${db.set.term}|${db.set.session}`;if(isClosed(T))return msg('This term is closed. Results cannot be edited.');db.students.filter(s=>s.cls==E.cl&&isAct(s)).forEach((s,i)=>{
+ const vs=SC.map(x=>$(x[0]+i).value);const kk=`${s.reg}|${E.sub}|${T}`;if(vs.some(x=>x!==''))db.scores[kk]=Object.fromEntries(SC.map((x,j)=>[x[0],Math.min(x[2],+vs[j]||0)]));else if(db.scores[kk])db.scores[kk]=null;
+ const c=$('cm'+i).value.trim();db.comments[`${s.reg}|${T}`]=c});save();msg('Scores saved')}
+function saveAtt(){db.students.filter(s=>s.cls==E.cl&&isAct(s)).forEach((s,i)=>db.att[`${s.reg}|${E.date}`]=$('pa'+i).checked);save();msg('Attendance saved');if($('atb'))fillAtt()}
+
+/* E-LIBRARY */
+function vLib(){const staff=me.r=='admin'||me.r=='educator';let sc='';if(me.r=='student'){const s=db.students.find(x=>x.reg==me.reg);sc=s?clsSec(s.cls):''}
+ const L=(db.books||[]).filter(b=>staff||(b.pub&&(!b.sec||b.sec==sc))).slice().reverse();
+ return `<h2>E-Library</h2>`+(staff?`<div class="box"><h3 style="margin-top:0">Upload an e-book (PDF)</h3><div class="grid"><div><label>Title</label><input id="bt"></div><div><label>For section</label><select id="bs"><option value="">All sections</option>${opts(SECS)}</select></div><div><label>PDF file (max 30 MB)</label><input type="file" id="bf" accept=".pdf,application/pdf"></div><div><label><input type="checkbox" id="bp" checked style="width:auto"> Publish for students now</label><button onclick="upBook()">Upload</button></div></div></div>`:'')+
+ `<div class="box"><div class="tw"><table><thead><tr><th>Title</th><th>Section</th><th>Added by</th><th>Date</th>${staff?'<th>Status</th>':''}<th></th></tr></thead><tbody>${L.map(b=>`<tr><td>${esc(b.title)}</td><td>${esc(b.sec||'All')}</td><td>${esc(b.by)}</td><td>${b.date}</td>${staff?`<td class="${b.pub?'pos':''}">${b.pub?'Published':'Not published'}</td>`:''}<td><a href="${bookUrl(b.id)}" target="_blank"><button class="g">Read</button></a> <a href="${bookUrl(b.id,b.title)}"><button class="g">Download</button></a>${staff?` <button onclick="pubBook('${b.id}')">${b.pub?'Unpublish':'Publish'}</button> <button class="d" onclick="delBook('${b.id}')">Delete</button>`:''}</td></tr>`).join('')||`<tr><td colspan="6">${staff?'No books uploaded yet.':'No e-books are available yet.'}</td></tr>`}</tbody></table></div></div>`}
+async function upBook(){if(!SERVER)return msg('The E-Library needs the online database to be connected.');const f=$('bf').files[0],t=v('bt');if(!t||!f)return msg('Enter a title and choose a PDF file.');
+ if(!/\.pdf$/i.test(f.name))return msg('Only PDF files are allowed.');if(f.size>31457280)return msg('File is too large (maximum 30 MB).');const id=String(Date.now());msg('Uploading...');
+ try{const {error}=await sb.storage.from('books').upload(id+'.pdf',f,{contentType:'application/pdf'});if(error)throw error}catch(e){return msg('Upload failed: '+(e.message||e))}
+ db.books.push({id,title:t,sec:v('bs'),by:me.n,date:new Date().toISOString().slice(0,10),pub:$('bp').checked});save();msg('E-book uploaded');draw()}
+function pubBook(id){const b=db.books.find(x=>x.id==id);if(b){b.pub=!b.pub;save();draw()}}
+async function delBook(id){if(!confirm('Delete this e-book permanently?'))return;try{await sb.storage.from('books').remove([id+'.pdf'])}catch(e){}db.books=db.books.filter(x=>x.id!=id);save();draw()}
+
+/* STUDENT PORTAL */
+const grade=t=>t>=70?'A':t>=60?'B':t>=50?'C':t>=45?'D':t>=40?'E':'F';
+function vPortal(){let s=null;
+ if(me.r=='student')s=db.students.find(x=>x.reg==me.reg);
+ else return `<h2>Student Portal</h2><div class="box"><div class="grid"><div><label>Reg. No.</label><input id="pr" value="${F.pr||''}"></div><div><label>Name</label><input id="pnm" value="${esc(F.pn||'')}"></div><div><button onclick="F.pr=v('pr');F.pn=v('pnm');draw()">Check result</button></div></div></div>`+(F.pr?res(db.students.find(x=>x.reg.toLowerCase()==F.pr.toLowerCase()&&x.name.toLowerCase()==F.pn.toLowerCase())):'');
+ return `<h2>Student Portal</h2>`+res(s)}
+function res(s){if(!s)return '<div class="box">No student matches that Reg. No. and name.</div>';
+ const T=termList().includes(F.vt)?F.vt:curT(),sel=termSel(T);
+ if(!db.pub[s.cls+'|'+T])return sel+`<div class="box"><b>${esc(s.name)}</b> (${s.reg})<p>Results for ${esc(T.replace('|',', '))} have not been published yet.</p></div>`;
+ return sel+card(s,T)+'<button class="g noprint" onclick="print()">Print report card</button>'}
+
+/* REPORT CARDS */
+function classRank(s,T){const tot=x=>stuRows(x,T).reduce((a,y)=>a+rt(y.r),0),m=db.students.filter(x=>x.cls==s.cls&&(isAct(x)||tot(x)>0)),t=tot(s);return [m.filter(x=>tot(x)>t).length+1,m.length]}
+function card(s,T){T=T||curT();const rows=stuRows(s,T),tot=rows.reduce((a,x)=>a+rt(x.r),0),avg=rows.length?tot/rows.length:0,
+ days=Object.keys(db.att).filter(k=>k.startsWith(s.reg+'|')),pr=days.filter(k=>db.att[k]).length,rm={A:'Excellent',B:'Very good',C:'Good',D:'Fair',E:'Pass',F:'Fail'};
+ return `<div class="rc"><div class="rh">${db.logo?`<img class="lg" src="${db.logo}">`:''}<div style="flex:1"><h1>FAZAG SCHOOLS OF SCIENCE AND TECHNICAL SKILLS</h1><div>Terminal report card: ${esc(T.split('|')[0])}, ${esc(T.split('|')[1])} session</div></div>${s.photo?`<img src="${s.photo}">`:''}</div>
+ <div class="ri"><span><b>Name:</b> ${esc(s.name)}</span><span><b>Reg. No.:</b> ${s.reg}</span><span><b>Class:</b> ${esc(s.cls)}</span><span><b>Gender:</b> ${s.gender}</span><span><b>Date admitted:</b> ${s.adm||s.date}</span></div>
+ <div class="tw"><table><thead><tr><th>Subject</th>${SC.map(x=>`<th>${x[1]}<br><small style="color:#f2b544">${x[2]}</small></th>`).join('')}<th>Total (100)</th><th>Grade</th><th>Remark</th></tr></thead><tbody>${rows.map(x=>{const t=rt(x.r),g=grade(t);return `<tr><td>${esc(subName(x.u))}</td>${SC.map(c=>`<td>${x.r[c[0]]??'–'}</td>`).join('')}<td><b>${t}</b></td><td>${g}</td><td>${rm[g]}</td></tr>`}).join('')||'<tr><td colspan="9">No scores recorded.</td></tr>'}</tbody></table></div>
+ <div class="sm"><span><b>Total:</b> ${tot}</span><span><b>Average:</b> ${avg.toFixed(1)}%</span><span><b>Attendance:</b> ${pr} of ${days.length} days</span></div>
+ ${traitsHtml(s,T)}
+ <p><b>Class teacher's comment:</b> ${esc(db.comments[`${s.reg}|${T}`]||'None')}</p>
+ <p><b>Principal's remark:</b> ${esc(db.prem[`${s.reg}|${T}`]||'None')}</p>
+ <div class="sg"><div>Class teacher's signature</div><div>Principal's signature</div><div>Parent's signature</div></div>
+ <p style="margin:14px 0 0"><small>Grading: A 70-100, B 60-69, C 50-59, D 45-49, E 40-44, F below 40.</small></p></div>`}
+function vRC(){const cl=myCls();if(!cl.includes(E.cl))E.cl=cl[0]||'';const vt=termList().includes(E.vt)?E.vt:curT(),cur=vt==curT(),st=db.students.filter(s=>s.cls==E.cl&&(cur?isAct(s):stuRows(s,vt).length));
+ return `<h2 class="noprint">Report Cards</h2><div class="box noprint"><div class="grid"><div><label>Class</label><select onchange="E.cl=this.value;draw()">${opts(cl,E.cl)}</select></div><div><label>Term</label><select onchange="E.vt=this.value;draw()">${termList().map(k=>`<option value="${k}" ${k==vt?'selected':''}>${esc(k.replace('|',', '))}${isClosed(k)?' (closed)':''}</option>`).join('')}</select></div><div><button onclick="print()">Print all report cards</button></div></div></div>`+(me.r=='admin'&&cur&&st.length?remBox(st):'')+(st.map(s=>card(s,vt)).join('')||'<div class="box">No students in this class.</div>')}
+function remBox(st){const T=`${db.set.term}|${db.set.session}`;return `<div class="box noprint"><h3 style="margin-top:0">Principal's remarks</h3><div class="tw"><table><tbody>${st.map((s,i)=>`<tr><td>${esc(s.name)}</td><td><input id="pm${i}" value="${esc(db.prem[s.reg+'|'+T]||'')}" style="min-width:320px"></td></tr>`).join('')}</tbody></table></div><br><button onclick="saveRem()">Save remarks</button></div>`}
+function saveRem(){const T=`${db.set.term}|${db.set.session}`;db.students.filter(s=>s.cls==E.cl&&isAct(s)).forEach((s,i)=>{const t=$('pm'+i).value.trim(),k=s.reg+'|'+T;db.prem[k]=t});save();msg('Remarks saved');draw()}
+
+/* SHARING BETWEEN COMPUTERS */
+const shareBox=()=>`<div class="box"><h3 style="margin-top:0">Share data between computers</h3><p style="color:var(--mu)">Export a data file on one computer, then load it on another (USB stick, email or WhatsApp). Admin files carry staff, students, classes and published results. Educator files carry scores, comments and attendance. Finance files carry transactions.</p><button onclick="exportData()">Export my data file</button> <button class="g" onclick="$('imp').click()">Load a data file</button></div>`;
+function exportData(){const b=new Blob([JSON.stringify({...db,_from:me.r})],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`fazag-${me.r}-${new Date().toISOString().slice(0,10)}.json`;a.click()}
+function mergeDb(d){if(!Array.isArray(d.staff)||!Array.isArray(d.students))throw 0;const fr=d._from,u=(a,b)=>[...new Set([...a,...(b||[])])];
+ db.classes=u(db.classes,d.classes);db.subjects=u(db.subjects,d.subjects);db.cats=u(db.cats,d.cats);
+ if(fr=='admin'){db.staff=d.staff;db.students=d.students;db.set=d.set;db.pub=d.pub||{};db.logo=d.logo||'';db.prem=d.prem||{};db.csec=d.csec||{}}
+ ['scores','comments','att','traits'].forEach(k=>db[k]=fr=='educator'?{...db[k],...d[k]}:{...d[k],...db[k]});
+ const ids=new Set(db.tx.map(t=>t.id));(d.tx||[]).forEach(t=>{if(!ids.has(t.id))db.tx.push(t)})}
+function importData(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{mergeDb(JSON.parse(r.result));save();msg('Data file loaded and merged.');if(me){me=db.staff.find(x=>x.u==me.u);if(!me)return logout();draw()}}catch(e){msg('That file could not be read.')}el.value=''};r.readAsText(f)}
+pull();
+setInterval(async()=>{if(!SERVER||busy||!sb)return;try{const {data}=await sb.from('school_data').select('v').eq('k','meta/ver').maybeSingle();if(data&&data.v!=ver){const o=await fetchAll();adopt(Object.assign(def(),o));if(me&&!/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName))draw()}}catch(e){}},8000);
+</script></body></html>
